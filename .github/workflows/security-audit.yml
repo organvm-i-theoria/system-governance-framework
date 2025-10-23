@@ -1,0 +1,65 @@
+name: Security and Compliance Audit
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'  # Weekly on Monday at 8:00 AM UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  issues: write
+
+jobs:
+  security-audit:
+    name: Security and Compliance Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Security Scorecard
+        uses: ossf/scorecard-action@v2.3.1
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: true
+
+      - name: Upload SARIF results to code-scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
+
+      - name: Branch Protection Check
+        run: |
+          echo "## Branch Protection Recommendations" >> audit-report.md
+          echo "" >> audit-report.md
+          echo "### Recommended Branch Protection Rules for main:" >> audit-report.md
+          echo "- [ ] Require a pull request before merging" >> audit-report.md
+          echo "- [ ] Require approvals (at least 1-2 reviewers)" >> audit-report.md
+          echo "- [ ] Dismiss stale PR approvals when new commits are pushed" >> audit-report.md
+          echo "- [ ] Require review from CODEOWNERS" >> audit-report.md
+          echo "- [ ] Require status checks to pass before merging" >> audit-report.md
+          echo "- [ ] Require branches to be up to date before merging" >> audit-report.md
+          echo "- [ ] Require signed commits" >> audit-report.md
+          echo "- [ ] Include administrators in restrictions" >> audit-report.md
+          echo "- [ ] Allow force pushes: disabled" >> audit-report.md
+          echo "- [ ] Allow deletions: disabled" >> audit-report.md
+
+      - name: Repository Security Check
+        run: |
+          echo "" >> audit-report.md
+          echo "### Security Features Recommendations:" >> audit-report.md
+          echo "- [ ] Enable Dependabot alerts" >> audit-report.md
+          echo "- [ ] Enable Dependabot security updates" >> audit-report.md
+          echo "- [ ] Enable Dependabot version updates" >> audit-report.md
+          echo "- [ ] Enable private vulnerability reporting" >> audit-report.md
+          echo "- [ ] Enable secret scanning" >> audit-report.md
+          echo "- [ ] Enable push protection for secrets" >> audit-report.md
+          echo "- [ ] Configure security policy (SECURITY.md)" >> audit-report.md
+          
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-report
+          path: audit-report.md

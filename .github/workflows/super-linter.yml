@@ -1,0 +1,36 @@
+name: Super-Linter
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Lint Code Base
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Lint Code Base
+        uses: github/super-linter/slim@v5
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_JSCPD: false
+          VALIDATE_KUBERNETES_KUBECONFORM: false
+          VALIDATE_CHECKOV: false
+          VALIDATE_GITLEAKS: false
+          LINTER_RULES_PATH: '.'
+          FILTER_REGEX_EXCLUDE: '.*/(\.git|\.github|node_modules|\.venv|venv|\.pytest_cache|__pycache__|\.mypy_cache|\.tox|build|dist|\.terraform)/.*'
