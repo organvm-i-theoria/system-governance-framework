@@ -2,9 +2,9 @@ name: Semgrep Static Analysis
 
 on:
   push:
-    branches: [ "main", "master", "develop" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "master", "develop" ]
+    branches: [ "main" ]
   schedule:
     - cron: '0 6 * * 1'  # Weekly on Monday at 6:00 AM UTC
 

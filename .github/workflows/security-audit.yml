@@ -34,7 +34,7 @@ jobs:
         run: |
           echo "## Branch Protection Recommendations" >> audit-report.md
           echo "" >> audit-report.md
-          echo "### Recommended Branch Protection Rules for main/master:" >> audit-report.md
+          echo "### Recommended Branch Protection Rules for main:" >> audit-report.md
           echo "- [ ] Require a pull request before merging" >> audit-report.md
           echo "- [ ] Require approvals (at least 1-2 reviewers)" >> audit-report.md
           echo "- [ ] Dismiss stale PR approvals when new commits are pushed" >> audit-report.md

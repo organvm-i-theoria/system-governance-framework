@@ -2,9 +2,9 @@ name: License Compliance Check
 
 on:
   push:
-    branches: [ "main", "master", "develop" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "master", "develop" ]
+    branches: [ "main" ]
   schedule:
     - cron: '0 9 * * 1'  # Weekly on Monday at 9:00 AM UTC
 
