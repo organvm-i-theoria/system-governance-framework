@@ -155,6 +155,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    labels: ["dependencies"]
+    commit-message:
+      prefix: "chore"
+      include: "scope"
       day: "monday"
       time: "09:00"
     open-pull-requests-limit: 10
