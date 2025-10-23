@@ -16,7 +16,7 @@ jobs:
     name: Pre-commit Checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: actions/setup-python@v5
         with:
@@ -45,7 +45,7 @@ jobs:
       has-docs: ${{ steps.changes.outputs.docs }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Detect changes
         id: changes
@@ -88,7 +88,7 @@ jobs:
         language: ['python', 'node', 'go', 'java']
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Python
         if: matrix.language == 'python'
@@ -154,7 +154,7 @@ jobs:
     if: needs.detect-changes.outputs.has-docs == 'true'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Lint Markdown
         uses: DavidAnson/markdownlint-cli2-action@v16
