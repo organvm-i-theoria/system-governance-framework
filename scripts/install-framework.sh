@@ -4,8 +4,6 @@ set -e
 # System Governance Framework - Installation Script
 # Usage: bash <(curl -fsSL https://raw.githubusercontent.com/4-b100m/system-governance-framework/main/scripts/install-framework.sh)
 
-VERSION="${1:-v3.0.0}"
-PRESET="${2:-standard}"
 REPO_URL="https://raw.githubusercontent.com/4-b100m/system-governance-framework"
 
 # Colors for output
@@ -14,6 +12,33 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
+
+show_help() {
+    echo -e "${BLUE}System Governance Framework - Installer${NC}"
+    echo ""
+    echo -e "${BLUE}Usage:${NC}"
+    echo -e "  ${GREEN}bash install-framework.sh${NC} ${YELLOW}[VERSION] [PRESET]${NC}"
+    echo ""
+    echo -e "${BLUE}Arguments:${NC}"
+    echo -e "  ${YELLOW}VERSION${NC}   Version tag to install (default: v3.0.0)"
+    echo -e "  ${YELLOW}PRESET${NC}    Configuration preset (default: standard)"
+    echo ""
+    echo -e "${BLUE}Flags:${NC}"
+    echo -e "  ${YELLOW}-h, --help${NC}   Show this help message"
+    echo ""
+    echo -e "${BLUE}Examples:${NC}"
+    echo -e "  ${GREEN}bash install-framework.sh${NC}"
+    echo -e "  ${GREEN}bash install-framework.sh${NC} ${YELLOW}v2.0.0${NC}"
+    echo -e "  ${GREEN}bash install-framework.sh${NC} ${YELLOW}v3.0.0 minimal${NC}"
+}
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    show_help
+    exit 0
+fi
+
+VERSION="${1:-v3.0.0}"
+PRESET="${2:-standard}"
 
 echo -e "${BLUE}"
 echo "╔═══════════════════════════════════════════════════════════╗"
@@ -52,10 +77,11 @@ echo -e "  ${BLUE}Preset:${NC} $PRESET"
 echo ""
 
 # Confirm installation
-read -p "Proceed with installation? [Y/n] " -n 1 -r
+echo -ne "${YELLOW}Proceed with installation? [Y/n] ${NC}"
+read -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]] && [[ ! -z $REPLY ]]; then
-    echo "Installation cancelled."
+    echo -e "\nInstallation cancelled."
     exit 0
 fi
 
@@ -215,6 +241,9 @@ else
         for lang in "${LANGUAGES[@]}"; do
             yq eval ".project.languages += [\"$lang\"]" -i .github/governance.yml 2>/dev/null || true
         done
+    else
+        echo -e "  ${YELLOW}⚠️  yq not found, skipping automatic language configuration.${NC}"
+        echo -e "  ${YELLOW}Please manually add the detected languages to .github/governance.yml${NC}"
     fi
 fi
 
