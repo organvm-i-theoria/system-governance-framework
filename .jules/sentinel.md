@@ -1,0 +1,4 @@
+## 2024-10-22 - Script Argument Injection
+**Vulnerability:** The `scripts/install-framework.sh` script used user-supplied arguments (`VERSION` and `PRESET`) directly in file generation commands without validation. This allowed attackers to inject newline characters and arbitrary content into the generated GitHub Actions workflow files.
+**Learning:** Shell scripts processing user input for generating configuration files are susceptible to injection attacks if the input can alter the structure of the generated file (e.g., via heredocs). `cat` heredocs expand variables but do not sanitize them.
+**Prevention:** Always validate and sanitize user inputs in shell scripts using strict regex allowlists (e.g., `^[a-zA-Z0-9._-]+$`) before using them in sensitive operations like file generation or command execution. Fail fast if input is invalid.

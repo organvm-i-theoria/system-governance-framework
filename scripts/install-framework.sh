@@ -15,6 +15,19 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Validate inputs
+if [[ ! "$VERSION" =~ ^[a-zA-Z0-9._/-]+$ ]]; then
+    echo -e "${RED}❌ Error: Invalid version format${NC}"
+    echo "Version must contain only alphanumeric characters, dots, underscores, hyphens, and slashes."
+    exit 1
+fi
+
+if [[ ! "$PRESET" =~ ^[a-zA-Z0-9._-]+$ ]]; then
+    echo -e "${RED}❌ Error: Invalid preset format${NC}"
+    echo "Preset must contain only alphanumeric characters, dots, underscores, and hyphens."
+    exit 1
+fi
+
 echo -e "${BLUE}"
 echo "╔═══════════════════════════════════════════════════════════╗"
 echo "║  System Governance Framework - Installer                  ║"
