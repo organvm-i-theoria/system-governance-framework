@@ -4,16 +4,35 @@ set -e
 # System Governance Framework - Installation Script
 # Usage: bash <(curl -fsSL https://raw.githubusercontent.com/4-b100m/system-governance-framework/main/scripts/install-framework.sh)
 
-VERSION="${1:-v3.0.0}"
-PRESET="${2:-standard}"
-REPO_URL="https://raw.githubusercontent.com/4-b100m/system-governance-framework"
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
+
+show_help() {
+    echo "Usage: $0 [VERSION] [PRESET]"
+    echo ""
+    echo "Arguments:"
+    echo -e "  ${YELLOW}VERSION${NC}   Version tag to install (default: v3.0.0)"
+    echo -e "  ${YELLOW}PRESET${NC}    Configuration preset (default: standard)"
+    echo ""
+    echo "Options:"
+    echo -e "  ${YELLOW}-h, --help${NC}  Show this help message"
+    echo ""
+    echo "Example:"
+    echo "  $0 v3.1.0 minimal"
+}
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    show_help
+    exit 0
+fi
+
+VERSION="${1:-v3.0.0}"
+PRESET="${2:-standard}"
+REPO_URL="https://raw.githubusercontent.com/4-b100m/system-governance-framework"
 
 echo -e "${BLUE}"
 echo "╔═══════════════════════════════════════════════════════════╗"
@@ -52,8 +71,9 @@ echo -e "  ${BLUE}Preset:${NC} $PRESET"
 echo ""
 
 # Confirm installation
-read -p "Proceed with installation? [Y/n] " -n 1 -r
-echo
+echo -ne "${YELLOW}Proceed with installation? [Y/n] ${NC}"
+read -n 1 -r
+echo ""
 if [[ ! $REPLY =~ ^[Yy]$ ]] && [[ ! -z $REPLY ]]; then
     echo "Installation cancelled."
     exit 0
@@ -211,10 +231,20 @@ else
     echo -e "${GREEN}✅ Detected ${#LANGUAGES[@]} language(s)${NC}"
 
     # Update configuration with detected languages
+    YQ_FAILED=false
     if command -v yq &> /dev/null; then
         for lang in "${LANGUAGES[@]}"; do
-            yq eval ".project.languages += [\"$lang\"]" -i .github/governance.yml 2>/dev/null || true
+            if ! yq eval ".project.languages += [\"$lang\"]" -i .github/governance.yml 2>/dev/null; then
+                YQ_FAILED=true
+            fi
         done
+    else
+        YQ_FAILED=true
+    fi
+
+    if [ "$YQ_FAILED" = true ]; then
+         echo -e "  ${YELLOW}⚠️  Could not auto-update config (yq missing or incompatible)${NC}"
+         echo -e "  ${YELLOW}   Please manually add detected languages to .github/governance.yml${NC}"
     fi
 fi
 
