@@ -23,6 +23,25 @@ echo "╚═══════════════════════�
 echo -e "${NC}"
 echo ""
 
+# Input Validation
+if [[ ! "$VERSION" =~ ^[a-zA-Z0-9._/-]+$ ]]; then
+    echo -e "${RED}❌ Error: Invalid version format${NC}"
+    echo "Version must contain only alphanumeric characters, dots, underscores, hyphens, and slashes."
+    exit 1
+fi
+
+if [[ ! "$PRESET" =~ ^[a-zA-Z0-9._-]+$ ]]; then
+    echo -e "${RED}❌ Error: Invalid preset format${NC}"
+    echo "Preset must contain only alphanumeric characters, dots, underscores, and hyphens."
+    exit 1
+fi
+
+# Prevent path traversal
+if [[ "$VERSION" == *..* ]] || [[ "$PRESET" == *..* ]]; then
+    echo -e "${RED}❌ Error: Path traversal detected${NC}"
+    exit 1
+fi
+
 # Check if in git repository
 if [ ! -d ".git" ]; then
   echo -e "${RED}❌ Error: Not in a git repository${NC}"
@@ -52,7 +71,8 @@ echo -e "  ${BLUE}Preset:${NC} $PRESET"
 echo ""
 
 # Confirm installation
-read -p "Proceed with installation? [Y/n] " -n 1 -r
+echo -ne "${YELLOW}Proceed with installation? [Y/n] ${NC}"
+read -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]] && [[ ! -z $REPLY ]]; then
     echo "Installation cancelled."
