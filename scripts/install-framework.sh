@@ -15,6 +15,32 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Help function
+show_help() {
+    echo -e "${BLUE}System Governance Framework - Installer${NC}"
+    echo ""
+    echo -e "${GREEN}Usage:${NC}   bash install-framework.sh [VERSION] [PRESET]"
+    echo ""
+    echo -e "${YELLOW}Arguments:${NC}"
+    echo "  VERSION   Version tag to install (default: v3.0.0)"
+    echo "  PRESET    Configuration preset (default: standard)"
+    echo ""
+    echo -e "${YELLOW}Options:${NC}"
+    echo "  -h, --help  Show this help message"
+    echo ""
+    echo -e "${YELLOW}Examples:${NC}"
+    echo "  bash install-framework.sh"
+    echo "  bash install-framework.sh v3.0.0 minimal"
+    echo "  bash install-framework.sh v2.5.0 enterprise"
+    echo ""
+}
+
+# Check for help flag
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    show_help
+    exit 0
+fi
+
 echo -e "${BLUE}"
 echo "╔═══════════════════════════════════════════════════════════╗"
 echo "║  System Governance Framework - Installer                  ║"
