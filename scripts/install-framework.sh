@@ -15,6 +15,29 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Input Validation
+if [[ ! "$VERSION" =~ ^[a-zA-Z0-9._/-]+$ ]]; then
+    echo -e "${RED}❌ Error: Invalid characters in VERSION${NC}"
+    echo "Allowed characters: alphanumeric, dot, underscore, hyphen, forward slash"
+    exit 1
+fi
+
+if [[ "$VERSION" == *..* ]]; then
+    echo -e "${RED}❌ Error: Path traversal attempt detected in VERSION${NC}"
+    exit 1
+fi
+
+if [[ ! "$PRESET" =~ ^[a-zA-Z0-9._-]+$ ]]; then
+    echo -e "${RED}❌ Error: Invalid characters in PRESET${NC}"
+    echo "Allowed characters: alphanumeric, dot, underscore, hyphen"
+    exit 1
+fi
+
+if [[ "$PRESET" == *..* ]]; then
+    echo -e "${RED}❌ Error: Path traversal attempt detected in PRESET${NC}"
+    exit 1
+fi
+
 echo -e "${BLUE}"
 echo "╔═══════════════════════════════════════════════════════════╗"
 echo "║  System Governance Framework - Installer                  ║"
