@@ -2,6 +2,14 @@
 
 # System Governance Framework
 
+[![CI](https://github.com/organvm-i-theoria/system-governance-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/organvm-i-theoria/system-governance-framework/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-pending-lightgrey)](https://github.com/organvm-i-theoria/system-governance-framework)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/organvm-i-theoria/system-governance-framework/blob/main/LICENSE)
+[![Organ I](https://img.shields.io/badge/Organ-I%20Theoria-8B5CF6)](https://github.com/organvm-i-theoria)
+[![Status](https://img.shields.io/badge/status-active-brightgreen)](https://github.com/organvm-i-theoria/system-governance-framework)
+[![Shell](https://img.shields.io/badge/lang-Shell-informational)](https://github.com/organvm-i-theoria/system-governance-framework)
+
+
 **A theoretical and operational framework for autonomous system governance -- formalising the principles by which a multi-organ creative-institutional system regulates itself without centralised authority.**
 
 ---
