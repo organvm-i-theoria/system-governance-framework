@@ -1,0 +1,29 @@
+[project]
+name = "system-governance-framework"
+version = "0.1.0"
+description = "Governance rules engine for the ORGAN system — validates promotion state machines, dependency constraints, and cross-organ policies"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "ORGAN System" }]
+keywords = ["governance", "validation", "state-machine", "policy-engine"]
+
+dependencies = [
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
