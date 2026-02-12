@@ -16,6 +16,8 @@ jobs:
   pr-validation:
     runs-on: ubuntu-latest
     name: Validate PR Quality
+    # Skip bot-authored PRs (Dependabot, Copilot, Renovate, etc.)
+    if: github.actor != 'dependabot[bot]' && github.actor != 'copilot-swe-agent[bot]' && github.actor != 'renovate[bot]'
 
     steps:
       - name: Checkout code
@@ -25,9 +27,9 @@ jobs:
 
       - name: Check PR title format
         id: title-check
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          PR_TITLE="${{ github.event.pull_request.title }}"
-
           # Check for conventional commit format
           if echo "$PR_TITLE" | grep -qE '^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?:.+'; then
             echo "status=valid" >> $GITHUB_OUTPUT
@@ -40,9 +42,9 @@ jobs:
 
       - name: Check PR description
         id: description-check
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          PR_BODY="${{ github.event.pull_request.body }}"
-
           # Check if description is empty or too short
           if [ -z "$PR_BODY" ] || [ ${#PR_BODY} -lt 50 ]; then
             echo "status=insufficient" >> $GITHUB_OUTPUT
@@ -64,12 +66,12 @@ jobs:
 
       - name: Check for breaking changes
         id: breaking-check
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          PR_BODY="${{ github.event.pull_request.body }}"
-          PR_TITLE="${{ github.event.pull_request.title }}"
-
           # Check for breaking change indicators
-          if echo "$PR_BODY$PR_TITLE" | grep -qiE '(breaking|breaking.change|BREAKING CHANGE)'; then
+          if echo "${PR_BODY}${PR_TITLE}" | grep -qiE '(breaking|breaking.change|BREAKING CHANGE)'; then
             echo "has_breaking=true" >> $GITHUB_OUTPUT
             echo "⚠️ PR contains breaking changes"
 
@@ -104,7 +106,7 @@ jobs:
           echo "doc_files=$doc_files" >> $GITHUB_OUTPUT
 
           # Check if tests were added for source changes
-          if [ $source_files -gt 0 ] && [ $test_files -eq 0 ]; then
+          if [ "$source_files" -gt 0 ] && [ "$test_files" -eq 0 ]; then
             echo "needs_tests=true" >> $GITHUB_OUTPUT
             echo "⚠️ Source code changed but no test files modified"
           else
@@ -113,10 +115,10 @@ jobs:
           fi
 
           # Check PR size
-          if [ $total_files -gt 50 ]; then
+          if [ "$total_files" -gt 50 ]; then
             echo "size=large" >> $GITHUB_OUTPUT
             echo "⚠️ Large PR - consider breaking into smaller PRs"
-          elif [ $total_files -gt 20 ]; then
+          elif [ "$total_files" -gt 20 ]; then
             echo "size=medium" >> $GITHUB_OUTPUT
             echo "✓ Medium-sized PR"
           else
@@ -138,9 +140,9 @@ jobs:
 
       - name: Check documentation updates
         id: docs-check
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          PR_BODY="${{ github.event.pull_request.body }}"
-
           # Check if documentation checklist is completed
           if echo "$PR_BODY" | grep -q "\- \[x\].*documentation" || \
              echo "$PR_BODY" | grep -q "\- \[x\].*README"; then
