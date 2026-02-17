@@ -1,7 +1,6 @@
 # seed.yaml — Automation Contract for organvm-i-theoria/system-governance-framework
 # Schema: seed/v1.0
-# Generated: 2026-02-12 (AUTONOMY Sprint)
-# Category: standard
+# Generated: 2026-02-17 (SENSORIA Sprint)
 
 schema_version: "1.0"
 organ: I
@@ -10,12 +9,13 @@ repo: system-governance-framework
 org: organvm-i-theoria
 
 metadata:
-  implementation_status: PRODUCTION
+  implementation_status: ACTIVE
   tier: standard
   promotion_status: LOCAL
   last_validated: "2026-02-12"
-  generated: "2026-02-12"
-  sprint: "AUTONOMY"
+  generated: "2026-02-17"
+  sprint: "SENSORIA"
+  language: shell
 
 agents:
   - name: ci
@@ -24,9 +24,10 @@ agents:
     description: "Continuous integration pipeline"
 
 produces:
-  - type: dependency
-    description: Consumed by organvm-iv-taxis/petasum-super-petasum
-    consumers: [organvm-iv-taxis/petasum-super-petasum]
+  - type: theory
+    description: "Epistemological frameworks, recursive engines, ontological systems"
+
+consumes: []
 
 subscriptions:
   - event: governance.updated
