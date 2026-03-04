@@ -1,6 +1,6 @@
 """Tests for the promotion state machine."""
 
-from src.promotion import ALL_STATES, VALID_TRANSITIONS, can_promote, promote
+from src.promotion import VALID_TRANSITIONS, can_promote, promote
 
 
 class TestCanPromote:
