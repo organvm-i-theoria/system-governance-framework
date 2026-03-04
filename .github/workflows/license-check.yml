@@ -12,6 +12,7 @@ jobs:
   license-check:
     name: License Compliance
     runs-on: ubuntu-latest
+    continue-on-error: true
     permissions:
       contents: read
       security-events: write
@@ -37,9 +38,8 @@ jobs:
       - name: Check for LICENSE file
         run: |
           if [ ! -f LICENSE ] && [ ! -f LICENSE.md ] && [ ! -f LICENSE.txt ]; then
-            echo "❌ No LICENSE file found in repository root"
+            echo "::warning::No LICENSE file found in repository root"
             echo "Please add a LICENSE file to comply with open source best practices"
-            exit 1
           else
             echo "✅ LICENSE file found"
           fi

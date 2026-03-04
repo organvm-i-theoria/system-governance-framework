@@ -16,6 +16,7 @@ jobs:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: release-drafter/release-drafter@v6
         with:
