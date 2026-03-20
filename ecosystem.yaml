@@ -1,7 +1,18 @@
 schema_version: '1.0'
 repo: system-governance-framework
-organ: I
-display_name: Multi-organ governance rules and promotion criteria
+organ: IV
+display_name: "Multi-organ governance rules and promotion criteria"
+
 delivery:
-- platform: web_app
-  status: not_started
+- platform: governance_docs
+  status: live
+  priority: critical
+  notes: "Shell-based governance rule enforcement and promotion criteria"
+  next_action: "Keep rules aligned with engine governance module"
+
+content:
+- platform: docs_site
+  status: planned
+  priority: high
+  notes: "Governance rule reference, promotion state machine, dependency policies"
+  next_action: "Document all governance rules with examples"

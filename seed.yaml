@@ -1,12 +1,12 @@
-# seed.yaml — Automation Contract for organvm-i-theoria/system-governance-framework
+# seed.yaml — Automation Contract for organvm-iv-taxis/system-governance-framework
 # Schema: seed/v1.0
 # Generated: 2026-02-17 (SENSORIA Sprint)
 
 schema_version: "1.0"
-organ: I
-organ_name: Theory
+organ: IV
+organ_name: Orchestration
 repo: system-governance-framework
-org: organvm-i-theoria
+org: organvm-iv-taxis
 
 metadata:
   implementation_status: ACTIVE
