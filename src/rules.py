@@ -38,7 +38,7 @@ def check_license_exists(state: dict) -> tuple[bool, str]:
 
 def check_no_back_edges(state: dict) -> tuple[bool, str]:
     """Dependency flow is I→II→III only; higher organs cannot depend on lower."""
-    organ_order = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7}
+    organ_order = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8}
     organ = state.get("organ", "")
     dependencies = state.get("dependencies", [])
 
@@ -68,6 +68,32 @@ def check_implementation_status(state: dict) -> tuple[bool, str]:
     return False, f"Invalid implementation status: '{status}'"
 
 
+def check_ci_enabled(state: dict) -> tuple[bool, str]:
+    """All governed repos must have CI enabled."""
+    if state.get("ci_enabled", True):
+        return True, "CI is enabled"
+    return False, "CI is disabled — all governed repos require CI"
+
+
+def check_security_for_preset(state: dict) -> tuple[bool, str]:
+    """Standard and enterprise presets require security scanning."""
+    preset = state.get("preset", "")
+    if preset in ("standard", "enterprise"):
+        if not state.get("security_enabled", False):
+            return False, f"Preset '{preset}' requires security scanning to be enabled"
+        if preset == "enterprise" and not state.get("codeql_enabled", False):
+            return False, "Enterprise preset requires CodeQL to be enabled"
+    return True, f"Security configuration meets '{preset}' preset requirements"
+
+
+def check_compliance_for_enterprise(state: dict) -> tuple[bool, str]:
+    """Enterprise preset requires compliance features enabled."""
+    preset = state.get("preset", "")
+    if preset == "enterprise" and not state.get("compliance_enabled", False):
+        return False, "Enterprise preset requires compliance features to be enabled"
+    return True, "Compliance configuration is appropriate for preset"
+
+
 # Registry of all built-in rules
 BUILTIN_RULES: list[Rule] = [
     Rule("readme-exists", "Every repository must have a README", check_readme_exists),
@@ -75,4 +101,7 @@ BUILTIN_RULES: list[Rule] = [
     Rule("no-back-edges", "No reverse dependency edges allowed", check_no_back_edges),
     Rule("valid-doc-status", "Documentation status must be valid", check_documentation_status),
     Rule("valid-impl-status", "Implementation status must be valid", check_implementation_status),
+    Rule("ci-enabled", "CI must be enabled for all governed repos", check_ci_enabled, severity="warning"),
+    Rule("security-for-preset", "Security scanning must match preset level", check_security_for_preset),
+    Rule("compliance-for-enterprise", "Enterprise preset requires compliance", check_compliance_for_enterprise),
 ]
